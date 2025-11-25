@@ -1,0 +1,96 @@
+﻿@model List<GestionBodega.Models.Movimiento>
+
+@{
+    ViewData["Title"] = "Detalle de Ticket";
+    var cabecera = Model.FirstOrDefault();
+    var esSalida = cabecera?.Tipo == "SALIDA";
+}
+
+<div class="container mt-4 mb-5">
+
+    <div class="mb-3">
+        <a asp-action="Index" class="btn btn-link text-decoration-none text-muted ps-0">
+            <i class="fas fa-arrow-left me-1"></i> Volver al Historial
+        </a>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+
+        <div class="card-header p-5 text-white"
+             style="background: @(esSalida ? "linear-gradient(135deg, #ffc107 0%, #fd7e14 100%)" : "linear-gradient(135deg, #198754 0%, #20c997 100%)");">
+            <div class="d-flex justify-content-between align-items-start">
+                <div>
+                    <h6 class="text-uppercase opacity-75 mb-1 text-dark fw-bold">Comprobante de Movimiento</h6>
+                    <h2 class="fw-bold text-dark mb-0" style="letter-spacing: 1px;">@cabecera?.NroCotizacion</h2>
+                </div>
+                <div class="text-end">
+                    <div class="badge bg-white text-dark fs-6 px-3 py-2 rounded-pill shadow-sm mb-2">
+                        @(esSalida ? "SALIDA DE BODEGA" : "INGRESO / DEVOLUCIÓN")
+                    </div>
+                    <div class="text-dark fw-bold opacity-75">
+                        <i class="far fa-calendar-alt me-1"></i> @cabecera?.Fecha.ToString("dd MMMM yyyy, HH:mm")
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-body p-5 bg-white">
+
+            <div class="row mb-5">
+                <div class="col-md-6">
+                    <h6 class="text-uppercase text-muted small fw-bold mb-3">Solicitante / Responsable</h6>
+                    <div class="p-3 bg-light rounded-3 border">
+                        <h5 class="fw-bold text-dark mb-1">@cabecera?.Personal.Nombre @cabecera?.Personal.Apellido</h5>
+                        <p class="mb-0 text-muted small">RUT: <span class="font-monospace">@cabecera?.Personal.Rut</span></p>
+                        <p class="mb-0 text-muted small">Cargo: @cabecera?.Personal.Cargo</p>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end">
+                    <h6 class="text-uppercase text-muted small fw-bold mb-3">Detalles del Proyecto</h6>
+                    <h4 class="fw-bold text-secondary">@cabecera?.Proyecto</h4>
+                    <p class="text-muted small">ID Transacción: #@cabecera?.Id</p>
+                </div>
+            </div>
+
+            <h5 class="fw-bold text-dark mb-3">Items Procesados</h5>
+            <div class="table-responsive mb-4">
+                <table class="table table-striped border">
+                    <thead class="bg-dark text-white">
+                        <tr>
+                            <th class="py-3 ps-3">Producto / Descripción</th>
+                            <th>Marca</th>
+                            <th class="text-center">U. Medida</th>
+                            <th class="text-center">Cantidad</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td class="ps-3 fw-bold text-primary">@item.Material.Nombre</td>
+                                <td class="text-muted">@item.Material.Descripcion</td>
+                                <td class="text-center">@item.Material.Unidad</td>
+                                <td class="text-center fw-bold fs-5">@item.Cantidad</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="row mt-5 pt-4 border-top">
+                <div class="col-6">
+                    <p class="text-muted small">Documento generado electrónicamente.</p>
+                </div>
+                <div class="col-6 text-end">
+                    <button class="btn btn-outline-dark btn-sm" onclick="window.print()">
+                        <i class="fas fa-print me-1"></i> Imprimir Comprobante
+                    </button>
+                </div>
+            </div>
+
+        </div>
+        <div class="card-footer bg-light text-center py-3">
+            <small class="text-muted fw-bold">Sistema de Gestión de Bodega v2.5 Enterprise</small>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,65 @@
+﻿@{
+    var personal = ViewBag.Personal as List<GestionBodega.Models.Personal>;
+}
+<div class="card p-3 border-success">
+    <h5><i class="fas fa-undo"></i> Devolución Inteligente</h5>
+
+    <div class="mb-3">
+        <label>1. Seleccione Técnico:</label>
+        <select id="devTecnico" class="form-select" onchange="cargarProyectos()">
+            <option value="">Seleccionar...</option>
+            @foreach (var p in personal)
+            {
+                <option value="@p.Id">@p.Nombre @p.Apellido</option>
+            }
+        </select>
+    </div>
+
+    <div class="mb-3">
+        <label>2. Seleccione Proyecto Pendiente:</label>
+        <select id="devProy" class="form-select" onchange="cargarMaterialesPend()"><option value="">Espera...</option></select>
+    </div>
+
+    <div class="mb-3">
+        <label>3. Seleccione Material a Devolver:</label>
+        <select id="devMat" class="form-select"><option value="">Espera...</option></select>
+    </div>
+
+    <div class="input-group mb-3">
+        <input id="devCant" type="number" class="form-control" placeholder="Cantidad" />
+        <button class="btn btn-success" onclick="addDev()">Agregar</button>
+    </div>
+
+    <table class="table table-sm"><tbody id="bodyDev"></tbody></table>
+    <button class="btn btn-success w-100" onclick="procDev()">Confirmar Devolución</button>
+</div>
+
+<script>
+    let cartDev = [];
+    function cargarProyectos(){
+        let pid = document.getElementById('devTecnico').value;
+        fetch('/Bodega/ObtenerProyectosPorTecnico?personalId='+pid).then(r=>r.json()).then(d=>{
+            let s = document.getElementById('devProy'); s.innerHTML='<option>Seleccione...</option>';
+            d.forEach(p=> s.add(new Option(p,p)));
+        });
+    }
+    function cargarMaterialesPend(){
+        let pid = document.getElementById('devTecnico').value; let proy = document.getElementById('devProy').value;
+        fetch(`/Bodega/ObtenerMaterialesPendientes?personalId=${pid}&proyecto=${proy}`).then(r=>r.json()).then(d=>{
+            let s = document.getElementById('devMat'); s.innerHTML='<option>Seleccione...</option>';
+            d.forEach(m=> { let o=new Option(m.label + " (Pend: "+m.pendiente+")", m.id); o.dataset.max=m.pendiente; s.add(o); });
+        });
+    }
+    function addDev(){
+        let s = document.getElementById('devMat'); let opt = s.options[s.selectedIndex];
+        cartDev.push({id:parseInt(s.value), nom:opt.text, cant:parseInt(document.getElementById('devCant').value)});
+        let b = document.getElementById('bodyDev');
+        let l = cartDev[cartDev.length-1];
+        b.innerHTML+=`<tr><td>${l.nom}</td><td>${l.cant}</td></tr>`;
+    }
+    function procDev(){
+        let dto = { PersonalId: parseInt(document.getElementById('devTecnico').value), Proyecto: document.getElementById('devProy').value, Items: cartDev.map(x=>({MaterialId:x.id, Cantidad:x.cant})) };
+        fetch('/Bodega/ProcesarDevolucion',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(dto)})
+        .then(r=>r.json()).then(d=>{ alert(d.message); if(d.success) location.reload(); });
+    }
+</script>

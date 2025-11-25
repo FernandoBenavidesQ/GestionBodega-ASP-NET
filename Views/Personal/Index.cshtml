@@ -1,0 +1,123 @@
+﻿@model IEnumerable<GestionBodega.Models.Personal>
+
+@{
+    ViewData["Title"] = "Equipo Técnico";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <div>
+            <h2 class="fw-bold text-dark mb-0" style="letter-spacing: -1px;">
+                <i class="fas fa-users-cog text-danger me-2"></i> EQUIPO TÉCNICO
+            </h2>
+            <small class="text-muted text-uppercase" style="letter-spacing: 1px;">Gestión de colaboradores activos</small>
+        </div>
+        <a asp-action="Crear" class="btn btn-danger rounded-pill px-4 shadow-sm fw-bold hover-scale">
+            <i class="fas fa-user-plus me-2"></i> Nuevo Ingreso
+        </a>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-secondary text-uppercase small fw-bold">
+                        <tr>
+                            <th class="ps-4 py-3">Colaborador</th>
+                            <th>RUT</th>
+                            <th>Cargo / Rol</th>
+                            <th class="text-center">Estado</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr class="border-bottom">
+                                    <td class="ps-4 py-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar-circle bg-danger bg-opacity-10 text-danger me-3 shadow-sm">
+                                                <span class="fw-bold">@item.Nombre.Substring(0, 1)@item.Apellido.Substring(0, 1)</span>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold text-dark">@item.Nombre @item.Apellido</h6>
+                                                <small class="text-muted"><i class="fas fa-id-card me-1"></i> ID: @item.Id</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="font-monospace text-secondary fw-bold">@item.Rut</td>
+                                    <td>
+                                        @if (item.Cargo.Contains("Técnico"))
+                                        {
+                                            <span class="badge bg-info text-dark border"><i class="fas fa-tools me-1"></i> @item.Cargo</span>
+                                        }
+                                        else if (item.Cargo.Contains("Supervisor"))
+                                        {
+
+                                            <span class="badge bg-primary border"><i class="fas fa-user-tie me-1"></i> @item.Cargo</span>
+                                        }
+                                        else
+                                        {
+
+                                            <span class="badge bg-light text-dark border">@item.Cargo</span>
+                                        }
+                                    </td>
+                                    <td class="text-center">
+                                        <span class="badge rounded-pill bg-success bg-opacity-75 text-white px-3">
+                                            <i class="fas fa-check-circle me-1"></i> ACTIVO
+                                        </span>
+                                    </td>
+                                    <td class="text-center">
+                                        <form asp-action="Eliminar" asp-route-id="@item.Id" method="post" class="d-inline"
+                                              onsubmit="return confirm('¿Seguro que desea dar de baja a @item.Nombre @item.Apellido?');">
+                                            <button type="submit" class="btn btn-sm btn-outline-danger rounded-pill px-3 shadow-sm hover-danger" title="Dar de Baja">
+                                                <i class="fas fa-user-times me-1"></i> Baja
+                                            </button>
+                                        </form>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="5" class="text-center py-5 text-muted opacity-50">
+                                    <i class="fas fa-user-slash fa-3x mb-3"></i>
+                                    <p class="mb-0">No hay personal activo registrado.</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-light py-3 text-center">
+            <small class="text-muted">Total Colaboradores: <strong>@Model.Count()</strong></small>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-scale:hover {
+        transform: translateY(-2px);
+        transition: 0.3s;
+    }
+
+    .avatar-circle {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+    .hover-danger:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+</style>

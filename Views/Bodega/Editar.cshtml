@@ -1,0 +1,86 @@
+﻿@model GestionBodega.Models.Material
+
+@{
+    ViewData["Title"] = "Editar Stock";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8">
+
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+
+                <div class="card-header p-4 text-dark" style="background: linear-gradient(to right, #ffc107, #ffca2c);">
+                    <h4 class="mb-0 fw-bold"><i class="fas fa-pencil-alt me-2"></i> Ajuste de Inventario</h4>
+                    <small class="opacity-75 text-dark">Corrección manual de stock físico</small>
+                </div>
+
+                <div class="card-body p-5 bg-white">
+                    <form asp-action="Editar">
+                        <input type="hidden" asp-for="Id" />
+
+                        <div class="alert alert-light border dashed-border mb-4">
+                            <div class="row">
+                                <div class="col-12 mb-2">
+                                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Producto</small>
+                                    <div class="fw-bold text-primary">@Model.Nombre</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Marca</small>
+                                    <div class="text-dark">@Model.Descripcion</div>
+                                </div>
+                                <div class="col-6">
+                                    <small class="text-muted text-uppercase fw-bold" style="font-size: 0.7rem;">Categoría</small>
+                                    <div class="text-dark">@Model.Categoria?.Nombre</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <input asp-for="Stock" class="form-control form-control-lg text-center fw-bold border-warning text-dark"
+                                   type="number" min="0" style="font-size: 1.5rem;" />
+                            <label asp-for="Stock" class="text-muted">Cantidad Real en Bodega</label>
+                            <span asp-validation-for="Stock" class="text-danger small"></span>
+                        </div>
+
+                        @if (Model.Categoria != null && Model.Categoria.Nombre.Contains("Cable"))
+                        {
+                            <div class="form-floating mb-4">
+                                <input asp-for="Largo" class="form-control text-center" type="number" min="0" />
+                                <label asp-for="Largo">Metraje (Largo en metros)</label>
+                            </div>
+                        }
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                            <a asp-controller="Bodega" asp-action="Index" class="btn btn-light text-muted fw-bold px-4 rounded-pill">
+                                Cancelar
+                            </a>
+                            <button type="submit" class="btn btn-warning btn-lg px-5 fw-bold shadow-sm rounded-pill hover-scale">
+                                <i class="fas fa-save me-2"></i> Guardar Ajuste
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<style>
+    .dashed-border {
+        border: 2px dashed #dee2e6;
+        background-color: #f8f9fa;
+    }
+
+    .hover-scale:hover {
+        transform: translateY(-2px);
+        transition: 0.3s;
+    }
+</style>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

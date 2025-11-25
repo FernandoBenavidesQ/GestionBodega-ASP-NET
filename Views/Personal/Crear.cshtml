@@ -1,0 +1,92 @@
+﻿@model GestionBodega.Models.Personal
+
+@{
+    ViewData["Title"] = "Registrar Personal";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-7">
+
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-header p-4 text-white" style="background: linear-gradient(to right, #dc3545, #ff6b6b);">
+                    <h4 class="mb-0 fw-bold"><i class="fas fa-user-plus me-2"></i> Ficha de Ingreso</h4>
+                    <small class="opacity-90">Registrar nuevo miembro del equipo</small>
+                </div>
+
+                <div class="card-body p-5 bg-white">
+                    <form asp-action="Crear">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 mb-4"></div>
+
+                        <h6 class="text-danger text-uppercase fw-bold mb-3 border-bottom pb-2">Identificación</h6>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Rut" class="form-control bg-light border-0 fw-bold" placeholder="RUT">
+                                    <label asp-for="Rut" class="text-muted">RUT (con puntos y guion)</label>
+                                    <span asp-validation-for="Rut" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <select asp-for="Cargo" class="form-select bg-light border-0 fw-bold">
+                                        <option value="">-- Seleccione Rol --</option>
+                                        <option value="Técnico">Técnico Instalador</option>
+                                        <option value="Supervisor">Supervisor de Obra</option>
+                                        <option value="Prevencionista">Prevencionista de Riesgos</option>
+                                        <option value="Informático">Soporte TI</option>
+                                        <option value="Bodeguero">Asistente de Bodega</option>
+                                        <option value="Administración">Administrativo</option>
+                                        <option value="Operaciones">Gerencia Operaciones</option>
+                                    </select>
+                                    <label asp-for="Cargo" class="text-muted">Cargo Asignado</label>
+                                    <span asp-validation-for="Cargo" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <h6 class="text-danger text-uppercase fw-bold mb-3 border-bottom pb-2">Datos Personales</h6>
+
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Nombre" class="form-control bg-light border-0" placeholder="Nombre">
+                                    <label asp-for="Nombre" class="text-muted">Nombres</label>
+                                    <span asp-validation-for="Nombre" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Apellido" class="form-control bg-light border-0" placeholder="Apellido">
+                                    <label asp-for="Apellido" class="text-muted">Apellidos</label>
+                                    <span asp-validation-for="Apellido" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end pt-3">
+                            <a asp-action="Index" class="btn btn-light text-muted fw-bold px-4">Cancelar</a>
+                            <button type="submit" class="btn btn-danger btn-lg px-5 fw-bold shadow-sm hover-scale">
+                                <i class="fas fa-save me-2"></i> Registrar Colaborador
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+    <style>
+        .hover-scale:hover {
+            transform: translateY(-2px);
+            transition: 0.3s;
+        }
+    </style>
+}

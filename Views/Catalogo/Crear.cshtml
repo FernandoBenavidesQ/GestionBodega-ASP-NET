@@ -1,0 +1,85 @@
+﻿@model GestionBodega.Models.Catalogo
+
+@{
+    ViewData["Title"] = "Nueva Ficha";
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+
+            <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-header p-4 text-white" style="background: linear-gradient(to right, #198754, #20c997);">
+                    <h4 class="mb-0 fw-bold"><i class="fas fa-file-medical me-2"></i> Registrar Nuevo Producto</h4>
+                    <small class="opacity-75">Crear ficha técnica en el Catálogo Maestro</small>
+                </div>
+
+                <div class="card-body p-5 bg-white">
+                    <form asp-action="Crear">
+                        <div asp-validation-summary="ModelOnly" class="alert alert-danger rounded-3 mb-4"></div>
+
+                        <h6 class="text-success text-uppercase fw-bold mb-3 border-bottom pb-2">1. Clasificación</h6>
+                        <div class="row g-3 mb-4">
+                            <div class="col-md-6">
+                                <label asp-for="CategoriaId" class="form-label fw-bold text-muted">Familia / Categoría</label>
+                                <select asp-for="CategoriaId" class="form-select form-select-lg bg-light border-0" asp-items="ViewBag.CategoriaId"></select>
+                            </div>
+                            <div class="col-md-6">
+                                <label asp-for="UnidadMedida" class="form-label fw-bold text-muted">Unidad de Medida</label>
+                                <select asp-for="UnidadMedida" class="form-select form-select-lg bg-light border-0">
+                                    <option value="Unidad">Unidad (Caja/Pieza)</option>
+                                    <option value="Metros">Metros</option>
+                                    <option value="Kit">Kit</option>
+                                    <option value="Global">Global</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <h6 class="text-success text-uppercase fw-bold mb-3 border-bottom pb-2">2. Especificaciones</h6>
+                        <div class="row g-3 mb-3">
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Tipo" class="form-control bg-light border-0" placeholder="Tipo">
+                                    <label asp-for="Tipo" class="text-muted">Tipo (Ej: Switch, Router)</label>
+                                    <span asp-validation-for="Tipo" class="text-danger small"></span>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-floating">
+                                    <input asp-for="Marca" class="form-control bg-light border-0" placeholder="Marca">
+                                    <label asp-for="Marca" class="text-muted">Marca Fabricante</label>
+                                    <span asp-validation-for="Marca" class="text-danger small"></span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Modelo" class="form-control bg-light border-0 fw-bold" placeholder="Modelo">
+                            <label asp-for="Modelo" class="text-muted">Modelo Exacto / Nombre Comercial</label>
+                            <span asp-validation-for="Modelo" class="text-danger small"></span>
+                        </div>
+
+                        <div class="form-floating mb-4">
+                            <textarea asp-for="Detalle" class="form-control bg-light border-0" placeholder="Detalle" style="height: 100px"></textarea>
+                            <label asp-for="Detalle" class="text-muted">Descripción Adicional (Opcional)</label>
+                        </div>
+
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <a asp-action="Index" class="btn btn-light text-muted fw-bold px-4">Cancelar</a>
+                            <button type="submit" class="btn btn-success btn-lg px-5 fw-bold shadow-sm hover-scale">
+                                <i class="fas fa-save me-2"></i> Guardar Ficha
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

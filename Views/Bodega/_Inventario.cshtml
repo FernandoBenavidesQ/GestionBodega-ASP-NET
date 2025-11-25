@@ -1,0 +1,214 @@
+﻿@model List<GestionBodega.Models.Material>
+
+@{
+    var categorias = ViewBag.Categorias as List<GestionBodega.Models.Categoria> ?? new List<GestionBodega.Models.Categoria>();
+}
+
+<div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+
+    <div class="card-header p-4 text-white d-flex justify-content-between align-items-center"
+         style="background: linear-gradient(135deg, #0d6efd 0%, #0a58ca 100%);">
+        <div>
+            <h5 class="mb-0 fw-bold text-uppercase" style="letter-spacing: 1px;">Inventario Físico</h5>
+            <small class="opacity-75">Seleccione una carpeta para gestionar</small>
+        </div>
+        <button class="btn btn-light text-primary fw-bold rounded-pill px-4 shadow-sm" onclick="validarYAbrirModal()">
+            <i class="fas fa-plus-circle me-2"></i> Nuevo Ingreso
+        </button>
+    </div>
+
+    <div class="card-body p-4 bg-light">
+
+        <div class="mb-4">
+            <label class="fw-bold text-muted small text-uppercase mb-2">Seleccione Familia:</label>
+            <div class="d-flex flex-wrap gap-2">
+                @foreach (var cat in categorias)
+                {
+                    <button class="btn btn-white border px-3 rounded-pill shadow-sm hover-scale btn-carpeta"
+                            onclick="filtrarTabla(@cat.Id, this, '@cat.Nombre')">
+                        <i class="fas fa-folder me-1 text-warning"></i> @cat.Nombre
+                    </button>
+                }
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm rounded-3 overflow-hidden">
+            <div class="table-responsive">
+
+                <div id="mensajeVacio" class="text-center py-5 text-muted">
+                    <i class="fas fa-folder-open fa-3x mb-3 opacity-50"></i>
+                    <h5 class="fw-bold">Ninguna carpeta seleccionada</h5>
+                    <p class="small">Haga clic en una familia de arriba para ver el stock.</p>
+                </div>
+
+                <table class="table table-hover align-middle mb-0 d-none" id="tablaInventario">
+                    <thead class="bg-light text-secondary text-uppercase small fw-bold">
+                        <tr>
+                            <th class="py-3 ps-4">Producto</th>
+                            <th>Detalle</th>
+                            <th class="text-center">Stock</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        @foreach (var item in Model)
+                        {
+                            <tr class="fila-inv border-bottom" data-cat-id="@item.CategoriaId">
+                                <td class="ps-4 py-3">
+                                    <div class="d-flex align-items-center">
+                                        <div class="icon-shape bg-primary bg-opacity-10 text-primary rounded-circle p-2 me-3">
+                                            <i class="fas fa-box"></i>
+                                        </div>
+                                        <h6 class="mb-0 fw-bold text-dark">@item.Nombre</h6>
+                                    </div>
+                                </td>
+                                <td>
+                                    <span class="text-muted small">@item.Descripcion</span>
+                                </td>
+                                <td class="text-center">
+                                    <h5 class="mb-0 fw-bold @(item.Stock < 5 ? "text-danger" : "text-success")">
+                                        @item.Stock <small class="text-muted fs-6 fw-normal">@item.Unidad</small>
+                                    </h5>
+                                </td>
+                                <td class="text-center">
+                                    <a href="/Bodega/Editar/@item.Id" class="btn btn-sm btn-light text-primary rounded-circle shadow-sm"
+                                       data-bs-toggle="tooltip" title="Editar Stock">
+                                        <i class="fas fa-pen"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modalIngreso" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title">Ingresar Stock: <span id="lblCarpetaModal" class="fw-bold"></span></h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="fw-bold">Producto (Del Catálogo):</label>
+                    <select id="selectCatalogo" class="form-select"><option>Cargando...</option></select>
+                </div>
+                <div class="mb-3">
+                    <label class="fw-bold">Cantidad a Ingresar:</label>
+                    <input type="number" id="inputCantidad" class="form-control" min="1" value="1">
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary fw-bold" onclick="guardarIngreso()">Confirmar Ingreso</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .btn-white {
+        background: white;
+        color: #444;
+        transition: 0.2s;
+    }
+
+        .btn-white:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+    .active-filter {
+        background: #2c3e50 !important;
+        color: white !important;
+        border-color: #2c3e50 !important;
+    }
+
+        .active-filter i {
+            color: #fff !important;
+        }
+</style>
+
+<script>
+    var carpetaActualId = 0;
+    var carpetaActualNombre = "";
+
+    function filtrarTabla(catId, btn, nombreCat) {
+        document.querySelectorAll('.btn-carpeta').forEach(b => b.classList.remove('active-filter'));
+        btn.classList.add('active-filter');
+
+        carpetaActualId = catId;
+        carpetaActualNombre = nombreCat;
+
+        document.getElementById('mensajeVacio').classList.add('d-none');
+        document.getElementById('tablaInventario').classList.remove('d-none');
+
+        var filas = document.querySelectorAll('.fila-inv');
+        var hayDatos = false;
+
+        filas.forEach(row => {
+            if (row.getAttribute('data-cat-id') == catId) {
+                row.style.display = '';
+                hayDatos = true;
+            } else {
+                row.style.display = 'none';
+            }
+        });
+    }
+
+    function validarYAbrirModal() {
+        if (carpetaActualId === 0) {
+            alert("⚠️ Por favor, seleccione primero una carpeta familiar (Ej: Cableado) para agregar productos en ella.");
+            return;
+        }
+
+        document.getElementById('lblCarpetaModal').innerText = carpetaActualNombre;
+        var select = document.getElementById("selectCatalogo");
+        select.innerHTML = '<option>Cargando...</option>';
+
+        var myModal = new bootstrap.Modal(document.getElementById('modalIngreso'));
+        myModal.show();
+
+        fetch('/Bodega/ObtenerCatalogoPorCategoria?categoriaId=' + carpetaActualId)
+            .then(r => r.json())
+            .then(data => {
+                select.innerHTML = "";
+                if(data.length === 0) {
+                    select.innerHTML = '<option value="">No hay productos en el catálogo para esta familia.</option>';
+                } else {
+                    data.forEach(item => {
+                        var opt = document.createElement("option");
+                        opt.value = item.id;
+                        opt.text = item.texto;
+                        select.add(opt);
+                    });
+                }
+            });
+    }
+
+    function guardarIngreso() {
+        var catId = document.getElementById("selectCatalogo").value;
+        var cant = document.getElementById("inputCantidad").value;
+
+        if(!catId) { alert("Seleccione un producto"); return; }
+
+        var formData = new FormData();
+        formData.append("catalogoId", catId);
+        formData.append("cantidad", cant);
+
+        fetch('/Bodega/GuardarIngreso', { method: 'POST', body: formData })
+        .then(r => r.json())
+        .then(data => {
+            if(data.success) {
+                alert("✅ Stock ingresado correctamente.");
+                location.reload();
+            } else {
+                alert("❌ Error: " + data.message);
+            }
+        });
+    }
+</script>

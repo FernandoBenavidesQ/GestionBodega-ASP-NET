@@ -1,0 +1,150 @@
+﻿@{
+    ViewData["Title"] = "Centro de Comando";
+}
+
+<div class="container mt-4">
+
+    <div class="p-5 mb-5 text-white rounded-4 shadow-lg position-relative overflow-hidden"
+         style="background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);">
+
+        <div class="position-absolute top-0 end-0 opacity-10 pe-4 pt-3">
+            <i class="fas fa-microchip fa-10x"></i>
+        </div>
+
+        <div class="position-relative z-1">
+            <h1 class="display-4 fw-bold mb-3">
+                Hola, <span class="text-info">@User.Identity?.Name</span>
+            </h1>
+            <p class="lead mb-4 text-light opacity-75">Bienvenido al Sistema de Gestión de Bodega Inteligente.</p>
+            <a asp-controller="Bodega" asp-action="Index" class="btn btn-info btn-lg fw-bold rounded-pill px-5 shadow fw-bold text-dark">
+                <i class="fas fa-rocket me-2"></i> Iniciar Operaciones
+            </a>
+        </div>
+    </div>
+
+    <div class="row g-4">
+
+        <div class="col-md-6 col-lg-3">
+            <a asp-controller="Bodega" asp-action="Index" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-card tech-card">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-circle bg-primary bg-opacity-10 text-primary mb-3 mx-auto">
+                            <i class="fas fa-warehouse fa-2x"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark">Bodega Central</h5>
+                        <p class="text-muted small">Control de inventario, salidas y devoluciones.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pb-3">
+                        <span class="text-primary fw-bold small">Acceder <i class="fas fa-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <a asp-controller="Tickets" asp-action="Index" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-card tech-card">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-circle bg-warning bg-opacity-10 text-warning mb-3 mx-auto">
+                            <i class="fas fa-receipt fa-2x"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark">Historial Tickets</h5>
+                        <p class="text-muted small">Auditoría de movimientos y transacciones.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pb-3">
+                        <span class="text-warning fw-bold small">Revisar <i class="fas fa-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <a asp-controller="Catalogo" asp-action="Index" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-card tech-card">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-circle bg-success bg-opacity-10 text-success mb-3 mx-auto">
+                            <i class="fas fa-server fa-2x"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark">Catálogo Maestro</h5>
+                        <p class="text-muted small">Base de datos de productos y definiciones.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pb-3">
+                        <span class="text-success fw-bold small">Administrar <i class="fas fa-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <a asp-controller="Personal" asp-action="Index" class="text-decoration-none">
+                <div class="card h-100 border-0 shadow-sm hover-card tech-card">
+                    <div class="card-body text-center p-4">
+                        <div class="icon-circle bg-danger bg-opacity-10 text-danger mb-3 mx-auto">
+                            <i class="fas fa-users-cog fa-2x"></i>
+                        </div>
+                        <h5 class="fw-bold text-dark">Personal</h5>
+                        <p class="text-muted small">Gestión de técnicos y usuarios del sistema.</p>
+                    </div>
+                    <div class="card-footer bg-transparent border-0 pb-3">
+                        <span class="text-danger fw-bold small">Gestionar <i class="fas fa-arrow-right ms-1"></i></span>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    </div>
+
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card bg-dark text-white border-0 rounded-3 p-3 shadow d-flex flex-row align-items-center justify-content-between">
+                <div class="d-flex align-items-center">
+                    <div class="spinner-grow text-success spinner-grow-sm me-2" role="status"></div>
+                    <span class="small fw-bold text-uppercase letter-spacing-1">Sistema Operativo - Online</span>
+                </div>
+                <div class="text-white-50 small">
+                    <i class="fas fa-shield-alt me-1"></i> Conexión Segura SSL
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<style>
+
+    .hover-card {
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        background: white;
+    }
+
+        .hover-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1) !important;
+        }
+
+    .tech-card {
+        border-top: 3px solid transparent;
+    }
+
+        .tech-card:hover {
+            border-top: 3px solid currentColor;
+        }
+
+    .icon-circle {
+        width: 70px;
+        height: 70px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: transform 0.3s;
+    }
+
+    .hover-card:hover .icon-circle {
+        transform: scale(1.1) rotate(5deg);
+    }
+
+    .letter-spacing-1 {
+        letter-spacing: 1px;
+    }
+</style>

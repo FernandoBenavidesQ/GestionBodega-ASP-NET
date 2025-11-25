@@ -1,0 +1,110 @@
+﻿@model IEnumerable<GestionBodega.Models.Catalogo>
+
+@{
+    ViewData["Title"] = "Catálogo Maestro";
+}
+
+<div class="container mt-4">
+
+    <div class="d-flex justify-content-between align-items-center mb-4 border-bottom pb-3">
+        <div>
+            <h2 class="fw-bold text-dark mb-0" style="letter-spacing: -1px;">
+                <i class="fas fa-server text-success me-2"></i> CATÁLOGO MAESTRO
+            </h2>
+            <small class="text-muted text-uppercase" style="letter-spacing: 1px;">Base de datos de productos</small>
+        </div>
+        <a asp-action="Crear" class="btn btn-success rounded-pill px-4 shadow-sm fw-bold hover-scale">
+            <i class="fas fa-plus me-2"></i> Nueva Ficha
+        </a>
+    </div>
+
+    <div class="card shadow-lg border-0 rounded-4 overflow-hidden">
+
+        <div class="card-header bg-white p-4 border-bottom">
+            <form asp-action="Index" method="get">
+                <div class="input-group input-group-lg shadow-sm rounded-pill overflow-hidden border">
+                    <span class="input-group-text bg-white border-0 ps-4 text-success"><i class="fas fa-search"></i></span>
+                    <input type="text" name="buscar" class="form-control border-0"
+                           placeholder="Buscar por Modelo, Marca o Tipo..."
+                           value="@ViewData["BusquedaActual"]">
+                    <button class="btn btn-dark px-4 fw-bold" type="submit">BUSCAR</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="bg-light text-secondary text-uppercase small fw-bold">
+                        <tr>
+                            <th class="ps-4 py-3">Dispositivo / Modelo</th>
+                            <th>Familia</th>
+                            <th>Marca</th>
+                            <th>Tipo</th>
+                            <th class="text-center">U. Medida</th>
+                            <th class="text-center">Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white">
+                        @if (Model.Any())
+                        {
+                            @foreach (var item in Model)
+                            {
+                                <tr class="border-bottom">
+                                    <td class="ps-4 py-3">
+                                        <div class="d-flex align-items-center">
+                                            <div class="icon-shape bg-success bg-opacity-10 text-success rounded-circle p-2 me-3">
+                                                <i class="fas fa-microchip"></i>
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 fw-bold text-dark">@item.Modelo</h6>
+                                                <small class="text-muted">@item.Detalle</small>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td><span class="badge bg-light text-dark border">@item.Categoria.Nombre</span></td>
+                                    <td class="fw-bold text-secondary">@item.Marca</td>
+                                    <td>@item.Tipo</td>
+                                    <td class="text-center"><span class="badge bg-secondary bg-opacity-75">@item.UnidadMedida</span></td>
+                                    <td class="text-center">
+                                        <div class="btn-group">
+                                            <a asp-action="Editar" asp-route-id="@item.Id" class="btn btn-sm btn-outline-primary rounded-start" title="Editar">
+                                                <i class="fas fa-pen"></i>
+                                            </a>
+
+                                            <form asp-action="Eliminar" asp-route-id="@item.Id" method="post" class="d-inline"
+                                                  onsubmit="return confirm('¿Eliminar esta ficha del catálogo?');">
+                                                <button type="submit" class="btn btn-sm btn-outline-danger rounded-end border-start-0" title="Eliminar">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            }
+                        }
+                        else
+                        {
+                            <tr>
+                                <td colspan="6" class="text-center py-5 text-muted opacity-50">
+                                    <i class="fas fa-database fa-3x mb-3"></i>
+                                    <p class="mb-0">No se encontraron productos en la base de datos.</p>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="card-footer bg-light py-3 text-center">
+            <small class="text-muted">Mostrando @Model.Count() registros</small>
+        </div>
+    </div>
+</div>
+
+<style>
+    .hover-scale:hover {
+        transform: translateY(-2px);
+        transition: 0.3s;
+    }
+</style>

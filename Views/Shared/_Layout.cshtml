@@ -1,0 +1,119 @@
+﻿<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Gestión Bodega</title>
+
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f6f8;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .navbar-tech {
+            background: linear-gradient(90deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            padding: 0.8rem 1rem;
+        }
+
+        .navbar-brand {
+            font-weight: 700;
+            letter-spacing: 1px;
+            font-size: 1.3rem;
+        }
+
+        .nav-link {
+            font-weight: 500;
+            color: rgba(255,255,255,0.8) !important;
+            transition: all 0.3s ease;
+            padding: 0.5rem 1rem !important;
+            border-radius: 50px;
+        }
+
+            .nav-link:hover {
+                color: #ffffff !important;
+                background: rgba(255,255,255,0.1);
+                transform: translateY(-2px);
+            }
+
+        main {
+            flex: 1;
+            padding-bottom: 2rem;
+        }
+
+        .footer {
+            background-color: #fff;
+            border-top: 1px solid #e9ecef;
+            color: #6c757d;
+            padding: 1.5rem 0;
+            font-size: 0.85rem;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-dark navbar-tech fixed-top">
+            <div class="container-fluid px-4">
+                <a class="navbar-brand d-flex align-items-center" asp-controller="Home" asp-action="Index">
+                    <i class="fas fa-cube text-info me-2 fa-lg"></i>
+                    <span>GESTIÓN BODEGA</span>
+                </a>
+                <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse">
+                    <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-center">
+                        <li class="nav-item me-1"><a class="nav-link" asp-controller="Home" asp-action="Index"><i class="fas fa-home me-1"></i> Inicio</a></li>
+                        <li class="nav-item me-1"><a class="nav-link" asp-controller="Bodega" asp-action="Index"><i class="fas fa-warehouse me-1 text-info"></i> Bodega</a></li>
+                        <li class="nav-item me-1"><a class="nav-link" asp-controller="Tickets" asp-action="Index"><i class="fas fa-receipt me-1 text-warning"></i> Tickets</a></li>
+                        <li class="nav-item me-1"><a class="nav-link" asp-controller="Catalogo" asp-action="Index"><i class="fas fa-book-open me-1 text-success"></i> Catálogo</a></li>
+                        <li class="nav-item me-3 border-end pe-3"><a class="nav-link" asp-controller="Personal" asp-action="Index"><i class="fas fa-users me-1 text-danger"></i> Personal</a></li>
+
+                        @if (User.Identity!.IsAuthenticated)
+                        {
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" role="button" data-bs-toggle="dropdown">
+                                    <div class="bg-light text-dark rounded-circle d-flex justify-content-center align-items-center me-2" style="width: 32px; height: 32px;">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    <span class="small">@User.Identity.Name</span>
+                                </a>
+                                <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                                    <li><a class="dropdown-item text-danger fw-bold" asp-controller="Acceso" asp-action="Salir"><i class="fas fa-sign-out-alt me-2"></i> Cerrar Sesión</a></li>
+                                </ul>
+                            </li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <div class="container-fluid px-4" style="margin-top: 85px;">
+        <main role="main">
+            @RenderBody()
+        </main>
+    </div>
+
+    <footer class="footer mt-auto">
+        <div class="container text-center">
+            &copy; @DateTime.Now.Year <strong>Sistema de Gestión de Bodega</strong>
+        </div>
+    </footer>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
